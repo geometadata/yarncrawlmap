@@ -99,6 +99,18 @@
       }
       .mapboxgl-popup-content {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 1rem;
+      }
+      @media screen and (max-width: 768px) {
+        .mapboxgl-popup {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: none!important;
+        }
+        .mapboxgl-popup-tip {
+          display: none;
+        }
       }
     </style>
   </head>
@@ -138,16 +150,25 @@
         document.getElementById('map').classList.remove('not-visible');
       });
 
-      function popupTemplate(props) {
-        return `<h4>${props.StoreName}</h4>
-        <p>${props.lbl}</p>`
+      function popupTemplate(point, props) {
+        var label = (props.lbl).split("http")
+        return `<h3>${props.StoreName}</h3>
+        <p>
+          ${label[0]}<br>
+          <a href="http${label[1]}">More Information</a>
+        </p>
+        <a href="https://www.google.com/maps/dir/?api=1&?saddr=My+Location&destination=${point.lngLat.lat},${point.lngLat.lng}" target="_blank">Directions</a>`
+      }
+
+      function googleDirectionsTemplate(point) {
+        return `https://www.google.com/maps/dir/?api=1&?saddr=My+Location&destination=${point.lngLat.lat},${point.lngLat.lng}`
       }
 
       map.on("click", function(e) {
         var features = map.queryRenderedFeatures(e.point);
         if (features.length && features[0].source === "Yarn_Crawl_2019Source") {
           var popup = new mapboxgl.Popup().setLngLat(e.lngLat);
-          var html = popupTemplate(features[0].properties);
+          var html = popupTemplate(e, features[0].properties);
           // for (var i = 0; i < features.length; i++) {
           //   html +=
           //     features[i].layer.id +
@@ -207,6 +228,14 @@
               "circle-stroke-width": 3
             },
           "filter": ["in", "StoreName", ""]
+        });
+
+        // CHANGE MOUSE CURSOR WHEN HOVERING OVER STORES
+        map.on('mouseover', 'stores', function (e) {
+          map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseout', 'stores', function (e) {
+          map.getCanvas().style.cursor = '';
         });
 
       }
