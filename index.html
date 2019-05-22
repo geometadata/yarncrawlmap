@@ -165,8 +165,9 @@
       }
 
       map.on("click", function(e) {
+        map.setFilter('highlight', ["==", "StoreName", ""]);
         var features = map.queryRenderedFeatures(e.point);
-        if (features.length && features[0].source === "Yarn_Crawl_2019Source") {
+        if (features.length && features[0].source === "Yarn_Crawl_2019Source") }
           var popup = new mapboxgl.Popup().setLngLat(e.lngLat);
           var html = popupTemplate(e, features[0].properties);
           // for (var i = 0; i < features.length; i++) {
@@ -179,6 +180,10 @@
           // // html += "<h2>" + features[0].properties.Name + "</h2>"
           popup.setHTML(html);
           popup.addTo(map);
+          popup.on('close', function() {
+            map.setFilter('highlight', ["==", "StoreName", ""]);
+          });
+          map.setFilter('highlight', ["==", "StoreName", features[0].properties.StoreName]);
         }
       });
 
@@ -212,7 +217,7 @@
               "circle-stroke-color": "#E54642",
               "circle-stroke-width": 3
             }
-          }
+          }, 'road-label'
         );
 
         map.addLayer({
