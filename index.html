@@ -167,7 +167,7 @@
       map.on("click", function(e) {
         map.setFilter('highlight', ["==", "StoreName", ""]);
         var features = map.queryRenderedFeatures(e.point);
-        if (features.length && features[0].source === "Yarn_Crawl_2019Source") }
+        if (features.length && features[0].source === "Yarn_Crawl_2019Source") {
           var popup = new mapboxgl.Popup().setLngLat(e.lngLat);
           var html = popupTemplate(e, features[0].properties);
           // for (var i = 0; i < features.length; i++) {
