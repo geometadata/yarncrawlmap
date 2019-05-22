@@ -164,7 +164,7 @@
         return `https://www.google.com/maps/dir/?api=1&?saddr=My+Location&destination=${point.lngLat.lat},${point.lngLat.lng}`
       }
 
-      map.on("click", function(e) {
+      map.on("click", "stores", function(e) {
         map.setFilter('highlight', ["==", "StoreName", ""]);
         var features = map.queryRenderedFeatures(e.point);
         if (features.length && features[0].source === "Yarn_Crawl_2019Source") {
